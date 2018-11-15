@@ -10,12 +10,12 @@
 </head>
 
 <body>
-  <h1>Chat Server</h1>
+  <h2>Chat Server</h2>
   <div class="page">
     <div class="row">
       <div class="column">
-        <div>Main Room</div>
-        <div class="messages">
+        <div id="room-name">Room</div>
+        <div id="messages">
           <ul>
 
           </ul>
@@ -23,11 +23,11 @@
       </div>
       <div class="column">
         <div>All Rooms</div>
-        <div class="rooms"></div>
+        <div id="rooms"></div>
       </div>
     </div>
     <form method="POST" action="/send">
-    <div class="row">
+      <div class="row">
         <div>
           <input type="text" class="text">
         </div>
@@ -37,10 +37,23 @@
         <div>
           <button class="refresh">Refresh</button>
         </div>
-    </div>
+      </div>
     </form>
   </div>
   <script>
+    function listRoomName(nameArray) {
+      document.getElementById('rooms').innerHTML = '<ul>';
+      for (name of nameArray) {
+        document.getElementById('rooms').innerHTML += `<li><a href=# onclick=setRoomName('${name}')>${name.toLowerCase()}</a></li>`;
+      }
+      document.getElementById('rooms').innerHTML += '</ul>';
+    }
+
+    function setRoomName(name) {
+      document.getElementById('room-name').innerHTML = `${name} Room`;
+    }
+
+    listRoomName(['Main', 'JavaScript', 'Random']);
   </script>
 </body>
 

@@ -1,8 +1,12 @@
+h2 {
+  text-align: center;
+}
+
 div {
   padding: 10px;
 }
 
-.messages, .rooms {
+#messages, #rooms {
   border: 1px solid black;
   border-radius: 4px;
 }
@@ -11,21 +15,25 @@ div {
   padding: 3px;
   display: flex;
   border: 0px solid black;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 .column {
   display: flex;
   flex-direction: column;
+  height: auto;
   min-height: 300px;
   padding: 10px;
+  border: 0px solid black;
 }
 
-.messages {
+#messages {
   min-width: 300px;
   min-height: 300px;
 }
 
-.rooms {
+#rooms {
   min-width: 200px;
   min-height: 200px;
 }
@@ -43,4 +51,8 @@ div {
   padding: 3px;
   border-radius: 4px;
   border: 1px solid black;
+}
+
+li {
+  list-style-type: none;
 }

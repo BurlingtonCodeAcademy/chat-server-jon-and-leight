@@ -1,14 +1,15 @@
 const fs = require('fs');
 const $path = require('path');
 const express = require('express');
-const Room = require('./lib/Room');
+const Room = require('./lib/room.js');
 
 const app = express();
 const port = process.env.PORT || 5000;
 const publicDir = $path.resolve('./public');
 
 app.get("/", (request, response) => {
-  const main = new Room('main')
+  const main = new Room('main');
+  console.log(main);
   response.sendFile($path.join(publicDir, "index.html"))
 })
 

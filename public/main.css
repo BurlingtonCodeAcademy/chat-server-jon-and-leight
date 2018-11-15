@@ -1,0 +1,46 @@
+div {
+  padding: 10px;
+}
+
+.messages, .rooms {
+  border: 1px solid black;
+  border-radius: 4px;
+}
+
+.row {
+  padding: 3px;
+  display: flex;
+  border: 0px solid black;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  padding: 10px;
+}
+
+.messages {
+  min-width: 300px;
+  min-height: 300px;
+}
+
+.rooms {
+  min-width: 200px;
+  min-height: 200px;
+}
+
+.text {
+  min-width: 395px;
+}
+
+.submit, .refresh {
+  min-width: 60px;
+}
+
+.text, .submit, .refresh {
+  width: auto;
+  padding: 3px;
+  border-radius: 4px;
+  border: 1px solid black;
+}

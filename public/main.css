@@ -28,9 +28,19 @@ div {
   border: 0px solid black;
 }
 
+#room-name {
+  scroll-snap-type: y mandatory;
+}
+
+.child {
+  scroll-snap-align: start;
+}
+
 #messages {
-  min-width: 300px;
-  min-height: 300px;
+  width: 300px;
+  height: 300px;
+  overflow: scroll;
+  scroll-snap-align: end;
 }
 
 #rooms {
@@ -39,14 +49,14 @@ div {
 }
 
 .text {
-  min-width: 395px;
+  min-width: 295px;
 }
 
 .submit, .refresh {
   min-width: 60px;
 }
 
-.text, .submit, .refresh {
+.text, .submit, .refresh, #authorName {
   width: auto;
   padding: 3px;
   border-radius: 4px;

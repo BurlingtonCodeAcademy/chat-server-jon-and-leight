@@ -24,18 +24,23 @@
       <div class="column">
         <div>All Rooms</div>
         <div id="rooms"></div>
+        <form method="POST" action="/send">
+          <div>
+          </div>
       </div>
     </div>
-    <form method="POST" action="/send">
       <div class="row">
         <div>
-          <input type="text" class="text">
+            <input size="7" name="author" type="text" id="authorName" onkeypress="return !(window.event && window.event.keyCode == 13)" onchange="setAuthor()" placeholder="Enter Name">
+        </div>
+        <div>
+          <input type="text" class="text" name="body">
         </div>
         <div>
           <input type="submit" value="Send" class="submit">
         </div>
         <div>
-          <button class="refresh">Refresh</button>
+          <button class="refresh" onclick="event.preventDefault(); fetchMessages()">Refresh</button>
         </div>
       </div>
     </form>
@@ -44,16 +49,44 @@
     function listRoomName(nameArray) {
       document.getElementById('rooms').innerHTML = '<ul>';
       for (name of nameArray) {
-        document.getElementById('rooms').innerHTML += `<li><a href=# onclick=setRoomName('${name}')>${name.toLowerCase()}</a></li>`;
+        document.getElementById('rooms').innerHTML += `<li><a href=# onclick=setRoomName('${name}')>${name}</a></li>`;
       }
       document.getElementById('rooms').innerHTML += '</ul>';
     }
 
     function setRoomName(name) {
       document.getElementById('room-name').innerHTML = `${name} Room`;
+      document.getElementById('messages').innerHTML = '';
     }
 
+    function setAuthor() {
+      localStorage.setItem('authorName', event.target.value);      
+    }
+    (function getAuthor() {
+       document.getElementById('authorName').value = localStorage.getItem('authorName')
+    })()
+    
     listRoomName(['Main', 'JavaScript', 'Random']);
+
+    function scrollToBottom() {
+      var elem = document.getElementById('messages');
+        elem.scrollTop = elem.scrollHeight;
+    }
+
+    const chatRoom = document.location.pathname.split('/').slice(-1)
+
+    function fetchMessages() {
+      document.getElementById("messages").innerHTML = ""
+      fetch(`/${chatRoom}.json`).then(response => response.json()).then(messages => {
+        messages.forEach(message => {
+          document.getElementById("messages").innerHTML += `<li>${message.when}</li><li>${message.author}: ${message.body}</li>`
+          scrollToBottom();
+        })
+      })
+      scrollToBottom();
+    }
+    fetchMessages();
+
   </script>
 </body>
 

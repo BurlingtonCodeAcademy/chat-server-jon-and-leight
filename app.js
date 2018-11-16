@@ -11,8 +11,7 @@ const publicDir = $path.resolve('./public');
 const chatDir = $path.resolve('./public');
 
 const house = new House();
-house.createRoom("main");
-
+house.createRoom("Main");
 
 
 // app.get("/.json", (_request, response) => {
@@ -20,6 +19,11 @@ house.createRoom("main");
 //   response.send(messages)
 // })
 
+
+app.get("/rooms.json", (request, response) => {
+  const rooms = house.getRoomNames()
+  response.send(rooms);
+})
 
 app.get("/:room.json", (request, response) => {
   const messages = house.getRoom(request.params.room).getMessages()
@@ -30,10 +34,10 @@ app.get("/chat/:room", (request, response) => {
   response.sendFile($path.join(publicDir, "index.html"))
 })
 
-app.post("/createRoom", express.urlencoded({extended: false}), (request, response) => {
-  console.log(request.body)
-  house.createRoom(request.body.room)
-  response.redirect(`/chat/${request.body.room}`)
+app.post("/createRoom", express.urlencoded({ extended: false }), (request, response) => {
+  nameWithUnderscores = request.body.room.split(' ').join('_');
+  house.createRoom(nameWithUnderscores)
+  response.redirect(`/chat/${nameWithUnderscores}`)
 })
 
 app.post("/send", express.urlencoded({ extended: false }), (request, response) => {
@@ -41,10 +45,20 @@ app.post("/send", express.urlencoded({ extended: false }), (request, response) =
   response.redirect(`/chat/${request.body.room}`)
 })
 
+app.get("/chat/", (_request, response) => {
+  response.redirect("/chat/Main")
+})
+
 app.get("/", (_request, response) => {
-  response.redirect("/chat/main")
+  response.redirect("/chat/Main")
 })
 
 app.use(express.static('public'));
+
+app.use((error, request, resume, next) => {
+  console.error(error.stack);
+  resume.status(500).redirect("back");
+});
+
 app.listen(port, () => console.log(`Chat app listening on port ${port}!`));
 

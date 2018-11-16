@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Chat!!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/main.css" />
 </head>
 
 <body>
@@ -14,7 +14,7 @@
   <div class="page">
     <div class="row">
       <div class="column">
-        <div id="room-name">Room</div>
+        <div id="room-name">Main Room</div>
         <div id="messages">
           <ul>
 
@@ -24,14 +24,25 @@
       <div class="column">
         <div>All Rooms</div>
         <div id="rooms"></div>
-        <form method="POST" action="/send">
-          <div>
-          </div>
+        <div>
+          <form method="POST" action="/createRoom">
+            <span>
+              <button class="refresh" type="submit" onclick="updateRoomsList();">Create Room</button>
+            </span>
+            <span>
+              <input id="chatRoomName" name="room" type="text" size="15" placeholder="JavaScript" onkeypress="return !(window.event && window.event.keyCode == 13)"
+              onchange="setRoom()">
+            </span>
+          </form>
+        </div>
       </div>
     </div>
+    <form method="POST" action="/send">
+      <input type="hidden" name="room" id="roomName" value="main">
       <div class="row">
         <div>
-            <input size="7" name="author" type="text" id="authorName" onkeypress="return !(window.event && window.event.keyCode == 13)" onchange="setAuthor()" placeholder="Enter Name">
+          <input size="7" name="author" type="text" id="authorName" onkeypress="return !(window.event && window.event.keyCode == 13)"
+            onchange="setAuthor()" placeholder="Enter Name">
         </div>
         <div>
           <input type="text" class="text" name="body">
@@ -46,46 +57,77 @@
     </form>
   </div>
   <script>
-    function listRoomName(nameArray) {
-      document.getElementById('rooms').innerHTML = '<ul>';
-      for (name of nameArray) {
-        document.getElementById('rooms').innerHTML += `<li><a href=# onclick=setRoomName('${name}')>${name}</a></li>`;
+
+    function setRoomsList(array) {
+      localStorage.setItem('roomsList', JSON.stringify(array));
+    }
+
+    function updateRoomsList() {
+      let roomsList = JSON.parse(localStorage.getItem('roomsList'));
+      console.log(roomsList);
+      let room = document.getElementById('chatRoomName').value;
+      if (roomsList.includes(room) === false) {
+        roomsList.push(room);
+        setRoomsList(roomsList);
+        listRoomName();
       }
-      document.getElementById('rooms').innerHTML += '</ul>';
+    }
+
+    function listRoomName() {
+      let roomsList = JSON.parse(localStorage.getItem('roomsList'));
+      document.getElementById('rooms').innerHTML = '';
+      for (let name of roomsList) {
+        document.getElementById('rooms').innerHTML += `<li><a href=/chat/${name} onclick="setRoomName('${name}'); getRoom();">${name}</a></li>`;
+      }
     }
 
     function setRoomName(name) {
       document.getElementById('room-name').innerHTML = `${name} Room`;
       document.getElementById('messages').innerHTML = '';
+      localStorage.setItem('roomName', name);
     }
 
+    function setRoom() {
+      localStorage.setItem('roomName', event.target.value);
+    }
+
+    function getRoom() {
+      let room = localStorage.getItem('roomName');
+      document.getElementById('chatRoomName').value = room;
+      document.getElementById('roomName').value = room;
+      setRoomName(room);
+    }
+
+    getRoom();
+
     function setAuthor() {
-      localStorage.setItem('authorName', event.target.value);      
+      localStorage.setItem('authorName', event.target.value);
     }
     (function getAuthor() {
-       document.getElementById('authorName').value = localStorage.getItem('authorName')
+      document.getElementById('authorName').value = localStorage.getItem('authorName')
     })()
-    
-    listRoomName(['Main', 'JavaScript', 'Random']);
+
+    listRoomName();
 
     function scrollToBottom() {
       var elem = document.getElementById('messages');
-        elem.scrollTop = elem.scrollHeight;
+      elem.scrollTop = elem.scrollHeight;
     }
 
-    const chatRoom = document.location.pathname.split('/').slice(-1)
-
     function fetchMessages() {
+    const chatRoom = document.location.pathname.split('/').slice(-1)
       document.getElementById("messages").innerHTML = ""
       fetch(`/${chatRoom}.json`).then(response => response.json()).then(messages => {
         messages.forEach(message => {
           document.getElementById("messages").innerHTML += `<li>${message.when}</li><li>${message.author}: ${message.body}</li>`
           scrollToBottom();
+          listRoomName();
         })
       })
       scrollToBottom();
     }
     fetchMessages();
+    //setInterval(fetchMessages, 1000);
 
   </script>
 </body>

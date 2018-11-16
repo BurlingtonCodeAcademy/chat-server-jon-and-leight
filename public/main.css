@@ -56,7 +56,7 @@ div {
   min-width: 60px;
 }
 
-.text, .submit, .refresh, #authorName {
+.text, .submit, .refresh, #authorName, #chatRoomName {
   width: auto;
   padding: 3px;
   border-radius: 4px;
@@ -65,4 +65,5 @@ div {
 
 li {
   list-style-type: none;
+  padding: 2px;
 }

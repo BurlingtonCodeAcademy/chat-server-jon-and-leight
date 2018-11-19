@@ -52,7 +52,7 @@
           <input type="submit" value="Send" class="submit">
         </div>
         <div>
-          <button class="refresh" onclick="event.preventDefault(); fetchMessages()">Refresh</button>
+          <button class="refresh" onclick="event.preventDefault(); updateRooms()">Refresh</button>
         </div>
       </div>
     </form>
@@ -100,15 +100,12 @@
     })()
 
     function scrollToBottom() {
-      var elem = document.getElementById('messages');
+      let elem = document.getElementById('messages');
       elem.scrollTop = elem.scrollHeight;
     }
 
-    function fetchMessages() {
-      const roomNameWithSpaces = document.location.pathname.split('/').slice(-1)[0].split('_').join(' ').split('%20').join(' ');
-      const roomNameWithUnderscores = roomNameWithSpaces.split(' ').join('_');
-      document.getElementById('roomName').value = roomNameWithUnderscores;
-      document.getElementById('room-name').innerHTML = `${roomNameWithSpaces} Room`;
+    function newMessage() {
+      const roomNameWithUnderscores = document.location.pathname.split('/').slice(-1)[0].split('%20').join(' ').split(' ').join('_');;
       document.getElementById("messages").innerHTML = ""
       fetch(`/${roomNameWithUnderscores}.json`).then(response => response.json()).then(messages => {
         messages.forEach(message => {
@@ -116,11 +113,7 @@
           scrollToBottom();
         })
       })
-      listRoomName();
     }
-    fetchMessages();
-    setInterval(fetchMessages, 2000);
-
 
     function listRoomName() {
       document.getElementById('rooms').innerHTML = '';
@@ -130,6 +123,20 @@
         })
       })
     }
+
+    function updateRooms() {
+      const roomNameWithSpaces = document.location.pathname.split('/').slice(-1)[0].split('_').join(' ').split('%20').join(' ');
+      const roomNameWithUnderscores = roomNameWithSpaces.split(' ').join('_');
+      document.getElementById('roomName').value = roomNameWithUnderscores;
+      document.getElementById('room-name').innerHTML = `${roomNameWithSpaces} Room`;
+      newMessage();
+      listRoomName();
+    }
+
+
+    setInterval(updateRooms, 4000);
+
+    updateRooms();
 
 
   </script>
